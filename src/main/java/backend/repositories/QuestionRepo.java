@@ -30,4 +30,19 @@ public class QuestionRepo {
         }
         return questions;
     }
+
+    public Question getQuestion(int questionId) {
+        Question result;
+        try (PreparedStatement sql = conn.prepareStatement("""
+                Select q.id, q.question_text FROM question q
+                """)) {
+            try (ResultSet rs = sql.executeQuery()) {
+                rs.next();
+                result = new Question(rs.getInt("id"), rs.getString("question_text"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
 }
