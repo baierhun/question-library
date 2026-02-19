@@ -4,6 +4,7 @@ import backend.services.QuestionService;
 import com.googlecode.lanterna.gui2.Window;
 import ui.windows.AllQuestionsWindow;
 import ui.windows.MainWindow;
+import ui.windows.QuestionWindow;
 
 /*
 Handles navigation
@@ -24,6 +25,10 @@ public class UIController {
 
     public void showAllQuestionsPage() {
         gui.show(new AllQuestionsWindow(this, questionService));
+    }
+
+    public void showQuestionPage(int questionId) {
+        gui.show(new QuestionWindow(this, questionService, questionId));
     }
 
     public void closeWindow(Window window) {

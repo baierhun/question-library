@@ -1,4 +1,5 @@
 import backend.Database;
+import backend.repositories.AnswerRepo;
 import backend.repositories.QuestionRepo;
 import backend.services.QuestionService;
 import ui.Gui;
@@ -27,9 +28,10 @@ public class App {
 
             // Repositories
             QuestionRepo questionRepo = new QuestionRepo(conn);
+            AnswerRepo answerRepo = new AnswerRepo(conn);
 
             // Services
-            QuestionService questionService = new QuestionService(questionRepo);
+            QuestionService questionService = new QuestionService(questionRepo, answerRepo);
 
             // GUI
             Gui gui = new Gui();

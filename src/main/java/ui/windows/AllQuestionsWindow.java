@@ -35,7 +35,7 @@ public class AllQuestionsWindow extends BasicWindow {
         panel.addComponent(alb);
 
         for (Question q : questions) {
-            alb.addItem(q.text(), () -> System.out.println(q.id()));
+            alb.addItem(q.text(), () -> ui.showQuestionPage(q.id()));
         }
         alb.addItem("Back", () -> ui.closeWindow(this));
 
