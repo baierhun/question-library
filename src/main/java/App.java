@@ -1,6 +1,7 @@
 import backend.Database;
 import backend.repositories.AnswerRepo;
 import backend.repositories.QuestionRepo;
+import backend.services.AnswerService;
 import backend.services.QuestionService;
 import ui.Gui;
 import ui.UIController;
@@ -32,11 +33,12 @@ public class App {
 
             // Services
             QuestionService questionService = new QuestionService(questionRepo, answerRepo);
+            AnswerService answerService = new AnswerService(answerRepo);
 
             // GUI
             Gui gui = new Gui();
             gui.start();
-            UIController ui = new UIController(gui, questionService);
+            UIController ui = new UIController(gui, questionService, answerService);
             ui.showMainMenu();
 
         } catch (IOException e) {

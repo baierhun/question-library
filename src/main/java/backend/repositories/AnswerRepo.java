@@ -49,4 +49,36 @@ public class AnswerRepo {
             throw new RuntimeException(e);
         }
     }
+
+    public void insertAnswers(List<Answer> answers, int questionId) {
+        /*
+        INSERT INTO answer_option (option_text, is_answer, question_id)
+            VALUES ('Hello',2),
+            VALUES ('World',1,2);
+
+         */
+        StringBuilder insertAnswerSql = new StringBuilder("INSERT INTO answer_option (option_text, is_answer, " +
+                "question_id) VALUES");
+        for (int i = 0; i < answers.size(); i++) {
+            insertAnswerSql.append(makeInsert(i == answers.size() - 1));
+        }
+
+        try (PreparedStatement sql = conn.prepareStatement(insertAnswerSql.toString())) {
+            int i = 1;
+            for (Answer a : answers) {
+                sql.setString(i++, a.text());
+                sql.setBoolean(i++, a.isAnswer());
+                sql.setInt(i++, questionId);
+            }
+            sql.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String makeInsert(boolean isLast) {
+        if (isLast) return " (?, ?, ?)";
+        return " (?, ?, ?),";
+    }
+
 }

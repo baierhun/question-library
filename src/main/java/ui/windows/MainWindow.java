@@ -31,7 +31,7 @@ public class MainWindow extends BasicWindow {
 
         MenuItem[] menu = {
                 new MenuItem("Search Questions by Tag", this::NoOp),
-                new MenuItem("Add New Question", this::NoOp),
+                new MenuItem("Add New Question", ui::showAddNewQuestionPage),
                 new MenuItem("View All Questions", ui::showAllQuestionsPage),
                 new MenuItem("Exit", ui::closeApp)
         };
