@@ -16,7 +16,7 @@ public class AllQuestionsWindow extends BasicWindow {
         super("All Questions");
         this.ui = ui;
         this.service = service;
-        setHints(List.of(Hint.CENTERED));
+        setHints(List.of(Hint.CENTERED, Hint.EXPANDED, Hint.NO_POST_RENDERING));
         setComponent(build());
     }
 

@@ -1,3 +1,5 @@
 package models;
 
-public record QuestionAnswer(Question question, Iterable<Answer> answers) {}
+import java.util.List;
+
+public record QuestionAnswer(Question question, List<Answer> answers) {}
