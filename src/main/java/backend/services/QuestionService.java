@@ -26,4 +26,12 @@ public class QuestionService {
         Question question = repo.getQuestion(questionId);
         return new QuestionAnswer(question, answers);
     }
+
+    public void updateAnswer(Answer answer) {
+        answerRepo.updateAnswer(answer);
+    }
+
+    public void updateQuestion(Question question) {
+        repo.updateQuestion(question);
+    }
 }

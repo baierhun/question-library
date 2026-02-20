@@ -35,7 +35,9 @@ public class QuestionRepo {
         Question result;
         try (PreparedStatement sql = conn.prepareStatement("""
                 Select q.id, q.question_text FROM question q
+                WHERE q.id = ?
                 """)) {
+            sql.setInt(1, questionId);
             try (ResultSet rs = sql.executeQuery()) {
                 rs.next();
                 result = new Question(rs.getInt("id"), rs.getString("question_text"));
@@ -44,5 +46,19 @@ public class QuestionRepo {
             throw new RuntimeException(e);
         }
         return result;
+    }
+
+    public void updateQuestion(Question question) {
+        try (PreparedStatement sql = conn.prepareStatement("""
+                UPDATE question
+                SET question_text=?
+                WHERE id=?;
+                """)) {
+            sql.setString(1, question.text());
+            sql.setInt(2, question.id());
+            sql.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

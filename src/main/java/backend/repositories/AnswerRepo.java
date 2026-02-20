@@ -34,4 +34,19 @@ public class AnswerRepo {
         }
         return answers;
     }
+
+    public void updateAnswer(Answer answer) {
+        try (PreparedStatement sql = conn.prepareStatement("""
+                UPDATE answer_option
+                SET is_answer=?,option_text=?
+                WHERE id=?;
+                """)) {
+            sql.setBoolean(1, answer.isAnswer());
+            sql.setString(2, answer.text());
+            sql.setInt(3, answer.id());
+            sql.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
