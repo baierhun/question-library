@@ -50,7 +50,7 @@ public class AnswerRepo {
         }
     }
 
-    public void insertAnswers(List<Answer> answers, int questionId) {
+    public void insertAnswers(List<Answer> answers, long questionId) {
         /*
         INSERT INTO answer_option (option_text, is_answer, question_id)
             VALUES ('Hello',2),
@@ -68,7 +68,7 @@ public class AnswerRepo {
             for (Answer a : answers) {
                 sql.setString(i++, a.text());
                 sql.setBoolean(i++, a.isAnswer());
-                sql.setInt(i++, questionId);
+                sql.setLong(i++, questionId);
             }
             sql.executeUpdate();
         } catch (SQLException e) {

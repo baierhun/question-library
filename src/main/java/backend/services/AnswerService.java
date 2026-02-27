@@ -15,7 +15,7 @@ public class AnswerService {
         this.answerRepo = answerRepo;
     }
 
-    public void addAnswers(List<Answer> answers, int questionId) {
+    public void addAnswers(List<Answer> answers, long questionId) {
         answerRepo.insertAnswers(answers, questionId);
     }
 }

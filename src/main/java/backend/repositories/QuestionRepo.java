@@ -61,4 +61,25 @@ public class QuestionRepo {
             throw new RuntimeException(e);
         }
     }
+
+    public long addQuestion(Question question) {
+        try (PreparedStatement sql = conn.prepareStatement("""
+                INSERT INTO question (question_text)
+                	VALUES (?);
+                """)) {
+            sql.setString(1, question.text());
+            int affectedRows = sql.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet rs = sql.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        long newId = rs.getLong(1);
+                        return newId;
+                    }
+                }
+            }
+            return -1L;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

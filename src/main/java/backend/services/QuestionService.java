@@ -34,4 +34,8 @@ public class QuestionService {
     public void updateQuestion(Question question) {
         repo.updateQuestion(question);
     }
+
+    public long addQuestion(Question question) {
+        return repo.addQuestion(question);
+    }
 }
