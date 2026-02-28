@@ -4,13 +4,45 @@ import backend.services.AnswerService;
 import backend.services.QuestionService;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.gui2.*;
-import com.googlecode.lanterna.gui2.menu.MenuItem;
 import models.Answer;
 import models.Question;
 import ui.UIController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+class AnswerComponent {
+    public Button closeButton = new Button("X");
+    public ActionListBox alb = new ActionListBox();
+    public Label answerLabel = new Label("Answer Option: ");
+    public TextBox answerText = new TextBox();
+    public Label isAnswerLabel = new Label("Is answer?");
+    public CheckBox isAnswerCheckbox = new CheckBox();
+    public Panel panel = new Panel().setLayoutManager(new GridLayout(5));
+    public ArrayList<AnswerComponent> components;
+
+    public AnswerComponent(ArrayList<AnswerComponent> componentsList) {
+        this.components = componentsList;
+        this.alb.addItem("x", () -> {
+            this.panel.removeComponent(this.answerLabel);
+            this.panel.removeComponent(this.answerText);
+            this.panel.removeComponent(this.isAnswerLabel);
+            this.panel.removeComponent(this.isAnswerCheckbox);
+            this.panel.removeComponent(this.closeButton);
+            this.panel.removeComponent(this.alb);
+            this.components.remove(this);
+        });
+
+        this.panel.addComponent(this.alb)
+                .addComponent(this.answerLabel)
+                .addComponent(this.answerText)
+                .addComponent(this.isAnswerLabel)
+                .addComponent(this.isAnswerCheckbox);
+
+        this.components.add(this);
+    }
+}
 
 public class AddNewQuestionWindow extends BasicWindow {
 
@@ -36,41 +68,33 @@ public class AddNewQuestionWindow extends BasicWindow {
                 .addComponent(new Label("Question: "))
                 .addComponent(questionInput);
 
-        Panel answerPanel = new Panel().setLayoutManager(new GridLayout(6));
-        ArrayList<TextBox> answerInputs = new ArrayList<>();
+        Panel answerContainer = new Panel().setLayoutManager(new LinearLayout());
+        ArrayList<AnswerComponent> answerInputs = new ArrayList<>();
         mainPanel.addComponent(questionPanel)
-                .addComponent(new Button("+ Add Answer Option", () -> addAnswer(answerPanel, answerInputs)));
+                .addComponent(new Button("+ Add Answer Option",
+                        () -> answerContainer.addComponent(new AnswerComponent(answerInputs).panel)));
 
-        mainPanel.addComponent(answerPanel);
+        mainPanel.addComponent(answerContainer);
         mainPanel.addComponent(new Panel().setLayoutManager(new GridLayout(2))
                 .addComponent(new Button("Back", () -> ui.closeWindow(this)))
-                .addComponent(new Button("Save", () ->
-                {
-                    long questionID = questionService.addQuestion(new Question(0, questionInput.getText()));
-//                    answerInputs.stream().map(x -> new Answer(0, x.getText()))
-//                    answerService.addAnswers();
-                }
-
-                ))
+                .addComponent(new Button("Save", saveAction(() -> questionInput.getText(), answerInputs)))
         );
 
         return mainPanel;
     }
 
-    private void addAnswer(Panel panel, ArrayList<TextBox> answerInputs) {
-        Button b = new Button("X");
-        Label l = new Label("Answer Option: ");
-        TextBox t = new TextBox();
-        answerInputs.add(t);
-        b.addListener((Button thisButton) -> {
-            panel.removeComponent(l);
-            panel.removeComponent(t);
-            panel.removeComponent(thisButton);
-            answerInputs.remove(t);
-        });
-
-        panel.addComponent(b);
-        panel.addComponent(l);
-        panel.addComponent(t);
+    private Runnable saveAction(Callable<String> getQuestionText, List<AnswerComponent> answerInputs) {
+        return () ->
+        {
+            long questionID = 0;
+            try {
+                questionID = questionService.addQuestion(new Question(0, getQuestionText.call()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            List<Answer> a = answerInputs.stream().map(x -> new Answer(0, x.answerText.getText(),
+                    x.isAnswerCheckbox.isChecked())).toList();
+            answerService.addAnswers(a, questionID);
+        };
     }
 }
