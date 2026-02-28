@@ -74,27 +74,32 @@ public class AddNewQuestionWindow extends BasicWindow {
                 .addComponent(new Button("+ Add Answer Option",
                         () -> answerContainer.addComponent(new AnswerComponent(answerInputs).panel)));
 
+        Label success = new Label("Saved!").setVisible(false);
+        Button saveButton = new Button("Save");
+        saveButton.addListener((thisButton) -> {
+            saveAction(questionInput.getText(), answerInputs, success, thisButton);
+        });
         mainPanel.addComponent(answerContainer);
         mainPanel.addComponent(new Panel().setLayoutManager(new GridLayout(2))
                 .addComponent(new Button("Back", () -> ui.closeWindow(this)))
-                .addComponent(new Button("Save", saveAction(() -> questionInput.getText(), answerInputs)))
+                .addComponent(saveButton)
         );
-
+        mainPanel.addComponent(success);
         return mainPanel;
     }
 
-    private Runnable saveAction(Callable<String> getQuestionText, List<AnswerComponent> answerInputs) {
-        return () ->
-        {
-            long questionID = 0;
-            try {
-                questionID = questionService.addQuestion(new Question(0, getQuestionText.call()));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            List<Answer> a = answerInputs.stream().map(x -> new Answer(0, x.answerText.getText(),
-                    x.isAnswerCheckbox.isChecked())).toList();
-            answerService.addAnswers(a, questionID);
-        };
+    private void saveAction(String getQuestionText, List<AnswerComponent> answerInputs, Label successLabel,
+                            Button pushedButton) {
+        pushedButton.setEnabled(false);
+        long questionID = 0;
+        try {
+            questionID = questionService.addQuestion(new Question(0, getQuestionText));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        List<Answer> a = answerInputs.stream().map(x -> new Answer(0, x.answerText.getText(),
+                x.isAnswerCheckbox.isChecked())).toList();
+        answerService.addAnswers(a, questionID);
+        successLabel.setVisible(true);
     }
 }
