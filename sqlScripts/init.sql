@@ -4,11 +4,14 @@ CREATE TABLE question (
 );
 
 CREATE TABLE answer_option (
-	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	option_text TEXT NOT NULL,
-	is_answer INTEGER NOT NULL CHECK (is_answer IN (0, 1)) DEFAULT 0,
-	question_id INTEGER NOT NULL,
-    CONSTRAINT answer_option_question_FK FOREIGN KEY (question_id) REFERENCES question(id)
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    option_text TEXT NOT NULL,
+    is_answer INTEGER NOT NULL CHECK (is_answer IN (0, 1)) DEFAULT 0,
+    question_id INTEGER NOT NULL,
+    CONSTRAINT answer_option_question_FK
+        FOREIGN KEY (question_id)
+        REFERENCES question(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE question_tag (
