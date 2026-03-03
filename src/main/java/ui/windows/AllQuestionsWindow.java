@@ -2,6 +2,7 @@ package ui.windows;
 
 import backend.services.QuestionService;
 import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
 import models.Question;
 import ui.UIController;
 
@@ -40,7 +41,17 @@ public class AllQuestionsWindow extends BasicWindow {
         questionsPanel.addComponent(alb);
 
         for (Question q : questions) {
-            deleteAlb.addItem("X", () -> service.deleteQuestion(q.id()));
+            deleteAlb.addItem("X", () ->
+            {
+                MessageDialogButton res =
+                        ui.showConfirmationDialog("Delete Record",
+                                "Are you sure you want to delete the question\n" + q.text(),
+                                MessageDialogButton.OK,
+                                MessageDialogButton.Cancel);
+                if (res == MessageDialogButton.OK) {
+                    service.deleteQuestion(q.id());
+                }
+            });
             alb.addItem(q.text(), () -> ui.showQuestionPage(q.id()));
         }
         panel.addComponent(new Button("Back", () -> ui.closeWindow(this)));

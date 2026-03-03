@@ -1,13 +1,19 @@
 package ui;
 
 import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.DefaultWindowManager;
+import com.googlecode.lanterna.gui2.EmptySpace;
+import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
+import com.googlecode.lanterna.gui2.Window;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialog;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
+import java.util.List;
 
 /*
 Manages Windows
@@ -42,5 +48,9 @@ public class Gui {
             System.err.println("Error closing screen");
             throw new RuntimeException(e);
         }
+    }
+
+    public MessageDialogButton showConfirmationDialog(String title, String message, MessageDialogButton... buttons) {
+        return MessageDialog.showMessageDialog(gui, title, message, buttons);
     }
 }

@@ -3,6 +3,7 @@ package ui;
 import backend.services.AnswerService;
 import backend.services.QuestionService;
 import com.googlecode.lanterna.gui2.Window;
+import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
 import ui.windows.AddNewQuestionWindow;
 import ui.windows.AllQuestionsWindow;
 import ui.windows.MainWindow;
@@ -37,6 +38,10 @@ public class UIController {
 
     public void showAddNewQuestionPage() {
         gui.show(new AddNewQuestionWindow(this, questionService, answerService));
+    }
+
+    public MessageDialogButton showConfirmationDialog(String title, String message, MessageDialogButton... buttons) {
+        return gui.showConfirmationDialog(title, message, buttons);
     }
 
     public void closeWindow(Window window) {
