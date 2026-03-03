@@ -38,4 +38,8 @@ public class QuestionService {
     public long addQuestion(Question question) {
         return repo.addQuestion(question);
     }
+
+    public int deleteQuestion(long questionId) {
+        return repo.deleteQuestion(questionId);
+    }
 }

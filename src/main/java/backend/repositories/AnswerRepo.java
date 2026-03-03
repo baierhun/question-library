@@ -76,6 +76,20 @@ public class AnswerRepo {
         }
     }
 
+    public int deleteAnswers(long questionId) {
+        String sqlString = """
+                DELETE FROM answer_option AS ao
+                WHERE ao.question_id = ?
+                """;
+
+        try (PreparedStatement sql = conn.prepareStatement(sqlString)) {
+            sql.setLong(1, questionId);
+            return sql.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static String makeInsert(boolean isLast) {
         if (isLast) return " (?, ?, ?)";
         return " (?, ?, ?),";

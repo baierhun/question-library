@@ -82,4 +82,27 @@ public class QuestionRepo {
             throw new RuntimeException(e);
         }
     }
+
+    public int deleteQuestion(long questionId) {
+        int questionsDeleted = 0;
+        try (PreparedStatement sql = conn.prepareStatement("""
+                DELETE FROM question AS q
+                WHERE q.id = ?
+                """)) {
+            sql.setLong(1, questionId);
+            questionsDeleted = sql.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        try (PreparedStatement answerSql = conn.prepareStatement("""
+                DELETE FROM answer_option AS ao
+                WHERE ao.question_id = ?
+                """)) {
+            answerSql.setLong(1, questionId);
+            answerSql.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return questionsDeleted;
+    }
 }

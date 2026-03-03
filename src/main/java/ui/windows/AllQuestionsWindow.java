@@ -29,15 +29,21 @@ public class AllQuestionsWindow extends BasicWindow {
                 new LinearLayout(Direction.VERTICAL)
         );
 
+        Panel questionsPanel = new Panel().setLayoutManager(new GridLayout(2));
+        panel.addComponent(questionsPanel);
+
         List<Question> questions = service.getAllQuestions();
 
         ActionListBox alb = new ActionListBox();
-        panel.addComponent(alb);
+        ActionListBox deleteAlb = new ActionListBox();
+        questionsPanel.addComponent(deleteAlb);
+        questionsPanel.addComponent(alb);
 
         for (Question q : questions) {
+            deleteAlb.addItem("X", () -> service.deleteQuestion(q.id()));
             alb.addItem(q.text(), () -> ui.showQuestionPage(q.id()));
         }
-        alb.addItem("Back", () -> ui.closeWindow(this));
+        panel.addComponent(new Button("Back", () -> ui.closeWindow(this)));
 
         return panel;
     }
