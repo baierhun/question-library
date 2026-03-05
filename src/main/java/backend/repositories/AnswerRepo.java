@@ -30,7 +30,7 @@ public class AnswerRepo {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
         return answers;
     }
@@ -46,7 +46,7 @@ public class AnswerRepo {
             sql.setInt(3, answer.id());
             sql.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
     }
 
@@ -57,6 +57,7 @@ public class AnswerRepo {
             VALUES ('World',1,2);
 
          */
+        if (answers.size() == 0) return;
         StringBuilder insertAnswerSql = new StringBuilder("INSERT INTO answer_option (option_text, is_answer, " +
                 "question_id) VALUES");
         for (int i = 0; i < answers.size(); i++) {
@@ -72,7 +73,7 @@ public class AnswerRepo {
             }
             sql.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
     }
 
@@ -86,8 +87,9 @@ public class AnswerRepo {
             sql.setLong(1, questionId);
             return sql.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
+        return -1;
     }
 
     private static String makeInsert(boolean isLast) {

@@ -26,11 +26,16 @@ public class AllQuestionsWindow extends BasicWindow {
 
     private Component build() {
         Panel panel = new Panel();
+        drawPanel(panel);
+        return panel;
+    }
+
+    private void drawPanel(Panel panel) {
         panel.setLayoutManager(
                 new LinearLayout(Direction.VERTICAL)
         );
 
-        Panel questionsPanel = new Panel().setLayoutManager(new GridLayout(2));
+        Panel questionsPanel = new Panel().setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
         panel.addComponent(questionsPanel);
 
         List<Question> questions = service.getAllQuestions();
@@ -40,22 +45,24 @@ public class AllQuestionsWindow extends BasicWindow {
         questionsPanel.addComponent(deleteAlb);
         questionsPanel.addComponent(alb);
 
+
         for (Question q : questions) {
             deleteAlb.addItem("X", () ->
             {
                 MessageDialogButton res =
                         ui.showConfirmationDialog("Delete Record",
                                 "Are you sure you want to delete the question\n" + q.text(),
-                                MessageDialogButton.OK,
-                                MessageDialogButton.Cancel);
+                                MessageDialogButton.Cancel,
+                                MessageDialogButton.OK);
                 if (res == MessageDialogButton.OK) {
                     service.deleteQuestion(q.id());
+                    questionsPanel.removeAllComponents();
+                    panel.removeAllComponents();
+                    drawPanel(panel);
                 }
             });
             alb.addItem(q.text(), () -> ui.showQuestionPage(q.id()));
         }
         panel.addComponent(new Button("Back", () -> ui.closeWindow(this)));
-
-        return panel;
     }
 }
